@@ -52,7 +52,6 @@ If you use it, please cite the paper:
 As mentioned before, `ksscorr` depends on the `inshell` package. To install it, run the following lines:
 
 ```stata
-* Install inshell 
 ssc install inshell
 ```
 
