@@ -1,6 +1,7 @@
 
 cap program drop ksscorr
 program define ksscorr 
+	version 14
 	syntax, FIRSTid(varname num) ///
 			SECONDid(varname num) ///
 			TIMEVAR(varname num) ///
