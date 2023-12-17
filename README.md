@@ -1,4 +1,4 @@
-# KSSCORR: Variance Components Bias Correction in Two-Way FE Models based on Kline, Saggio, Soelvsten (2020)
+# KSSCORR: Bias Correction of Variance Components in Two-Way FE Models based on Kline, Saggio, Soelvsten (2020)
 
 - Jump to: [`description`](#description) [`citation`](#citation) [`install`](#install) 
 
