@@ -90,7 +90,7 @@
 {title:References}
 
 {phang}
-Kline, Saggio and Soelvsten. "Bias Correction of Variance Components".
+Kline, Saggio and Soelvsten. "Leave-out Estimation of Variance Components".
 {it:Econometrica, 88(5), 1859–1898, 2020.}
 {browse "https://eml.berkeley.edu/~pkline/papers/KSS2020.pdf":[link]}
 {p_end}
