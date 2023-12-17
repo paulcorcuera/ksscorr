@@ -62,7 +62,7 @@ Next, you can run
 ```stata
 * Make sure to install the latest version
 cap ado uninstall ksscorr
-net install ksscorr, from("https://raw.githubusercontent.com/paulcorcuera/ksscorr/master/src/")
+net install ksscorr, from("https://raw.githubusercontent.com/paulcorcuera/ksscorr/main/src/")
 ```
 
 Otherwise, you can use the "Download Zip" button above, unzip it to a local directory, and then replace the above net install with
