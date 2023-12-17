@@ -33,7 +33,7 @@
 {syntab:VCHDFE Executable Options (see {browse "https://highdimensionaleconlab.github.io/VarianceComponentsHDFE.jl/dev/Executable/":here})}
 
 {synopt : {opth lev:el(str)}}leave-out level; options are observation ({opt obs}) and match ({opt match}). Default is {opt match} {p_end}
-{synopt : {opt partial:out({opt covars})}}covariates to be partialled-out before performing two-way FE correction{p_end}
+{synopt : {opt partial:out(covars)}}covariates to be partialled-out before performing two-way FE correction{p_end}
 
 {synopt : {opt nthreads(#)}}number of cores to be used in the Julia routine. Default is 1 (no multithreading used) {p_end}
 {synopt : {opth algo:ritm(str)}}algorithm to be used for bias correction; options are Exact ({opt exact}) and Johnson–Lindenstrauss ({opt JLA}). Default is {opt JLA} {p_end}
