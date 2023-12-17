@@ -17,6 +17,10 @@ You can check the new version additions [here](https://github.com/HighDimensiona
 
 -------------
 
+## Example of command output 
+
+ ![Example](stata_example_output.png)
+
 
 ####  Things to be aware of:
 
