@@ -38,7 +38,7 @@ If you use it, please cite the paper:
 
 ```bibtex
 @Article{Kline&Saggio&Soelvsten@ECTA2020,
-  author  = {Kline, Patrick and Saggio, Raffaele and S\olvsten, Mikkel },
+  author  = {Kline, Patrick and Saggio, Raffaele and S{\o}lvsten, Mikkel },
   journal = {Econometrica},
   title   = {Leave-out Estimation of Variance Components},
   year    = {2020},
