@@ -29,7 +29,7 @@ You can check the new version additions [here](https://github.com/HighDimensiona
 
 ## Citation
 
-`reghdfe` implements the estimator described in [Kline, Saggio and S\olvsten (2020)](https://eml.berkeley.edu/~pkline/papers/KSS2020.pdf).
+`ksscorr` implements the estimator described in [Kline, Saggio and S\olvsten (2020)](https://eml.berkeley.edu/~pkline/papers/KSS2020.pdf).
 If you use it, please cite the paper:
 
 ```bibtex
