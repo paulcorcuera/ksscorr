@@ -54,6 +54,16 @@ ssc install inshell
 
 You need to manually download and unzip the [Julia app](https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v0.2.1.8) based on your operating system. The path to the bin folder is a required argument in the `ksscorr` command.
 
+Next, you can run 
 
+```stata
+* Make sure to install the latest version
+cap ado uninstall ksscorr
+net install ksscorr, from("https://raw.githubusercontent.com/paulcorcuera/ksscorr/master/src/")
+```
 
-
+Otherwise, you can use the "Download Zip" button above, unzip it to a local directory, and then replace the above net install with
+```stata
+net install ksscorr, from(full_local_path_to_files) replace
+```
+where the path has to lead to the ado and sthlp files.
