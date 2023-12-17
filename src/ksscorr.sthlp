@@ -22,30 +22,30 @@
 {synopthdr}
 {synoptline}
 {syntab:Main Identifiers}
-{synopt: {opth first:id(firstidvar)}}variable that identifies individuals (eg:  {it:workerid}, {it:studentid}){p_end}
-{synopt: {opth second:id(secondidvar)}}variable that identifies groups (eg: {it:firmid}, {it:teacherid}){p_end}
+{synopt: {opt first:id(firstidvar)}}variable that identifies individuals (eg:  {it:workerid}, {it:studentid}){p_end}
+{synopt: {opt second:id(secondidvar)}}variable that identifies groups (eg: {it:firmid}, {it:teacherid}){p_end}
 {synopt: {opt timevar(tvar)}}time variable (eg: {it:year}, {it:quarter}){p_end}
-{synopt: {opth outcome:id(out)}}outcome variable (eg: {it:logwage}, {it:studentgrades}){p_end}
+{synopt: {opt outcome:id(out)}}outcome variable (eg: {it:logwage}, {it:studentgrades}){p_end}
 
 {syntab:Path to Executable}
 {synopt: {opt apppath(str)}}the path to the bin folder of the Julia executable. You must download mannually from this {browse "https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v0.2.1.8":link} {p_end}
 
 {syntab:VCHDFE Executable Options (see {browse "https://highdimensionaleconlab.github.io/VarianceComponentsHDFE.jl/dev/Executable/":here})}
 
-{synopt : {opth lev:el(str)}}leave-out level; options are observation ({opt obs}) and match ({opt match}). Default is {opt match} ({p_end}
-{synopt : {opth partial:out({opt covars})}}covariates to be partialled-out before performing two-way FE correction({p_end}
+{synopt : {opth lev:el(str)}}leave-out level; options are observation ({opt obs}) and match ({opt match}). Default is {opt match} {p_end}
+{synopt : {opt partial:out({opt covars})}}covariates to be partialled-out before performing two-way FE correction{p_end}
 
-{synopt : {opt nthreads(#)}}number of cores to be used in the Julia routine. Default is 1 (no multithreading used) ({p_end}
-{synopt : {opth algo:ritm(str)}}algorithm to be used for bias correction; options are Exact ({opt exact}) and Johnson–Lindenstrauss ({opt JLA}). Default is {opt JLA} ({p_end}
-{synopt : {opth nsim:ulations(#)}}number of simulations used in the JLA algorithm. Default is 200 ({p_end}
+{synopt : {opt nthreads(#)}}number of cores to be used in the Julia routine. Default is 1 (no multithreading used) {p_end}
+{synopt : {opth algo:ritm(str)}}algorithm to be used for bias correction; options are Exact ({opt exact}) and Johnson–Lindenstrauss ({opt JLA}). Default is {opt JLA} {p_end}
+{synopt : {opt nsim:ulations(#)}}number of simulations used in the JLA algorithm. Default is 200 {p_end}
 
-{synopt : {opt nofirst}}this option excludes computation of the corrected variance of the fist fixed effect ({p_end}
-{synopt : {opt nocov}}this option excludes computation of the corrected covariance of the fixed effects ({p_end}
-{synopt : {opt verbose}}increases the verbosity level of the Julia subroutine ({p_end}
-{synopt : {opth firstlab:el(str)}}attach a variable label to the first identifier for the Julia subroutine ({p_end}
-{synopt : {opth secondlab:el(str)}}attach a variable label to the second identifier for the Julia subroutine  ({p_end}
+{synopt : {opt nofirst}}this option excludes computation of the corrected variance of the fist fixed effect {p_end}
+{synopt : {opt nocov}}this option excludes computation of the corrected covariance of the fixed effects {p_end}
+{synopt : {opt verbose}}increases the verbosity level of the Julia subroutine {p_end}
+{synopt : {opth firstlab:el(str)}}attach a variable label to the first identifier for the Julia subroutine {p_end}
+{synopt : {opth secondlab:el(str)}}attach a variable label to the second identifier for the Julia subroutine  {p_end}
 
-{synopt : {opth getres:ults}}add the output from the KSS routine to the dataset (Pii, Bii, and indicator of the leave-out connected set). For more details please refer to the paper   ({p_end}
+{synopt : {opt getres:ults}}add the output from the KSS routine to the dataset (Pii, Bii, and indicator of the leave-out connected set). For more details please refer to the paper {p_end}
 
 
 {marker description}{...}
