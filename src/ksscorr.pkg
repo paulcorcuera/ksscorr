@@ -1,0 +1,15 @@
+v 0.2.1.8
+
+d ksscorr. A Stata Wrapper of Bias Correction of Variance Components based on Kline, Saggio and Soelvsten (2020)
+d
+d Author: Paul Corcuera
+d Support: paulcorcuera.g@gmail.com 
+d
+d
+d Requires: Stata version 17
+d
+
+f ksscorr.ado
+f ksscorr.sthlp
+
+e

@@ -1,0 +1,11 @@
+v 0.2.1.8
+d ksscorr, a Stata program
+
+p ksscorr A Stata Wrapper of Bias Correction of Variance Components based on Kline, Saggio and Soelvsten (2020)
+
+* l word-to-show path-or-url [description]
+* t: Directories within site:
+* t path [description]
+* Packages:
+* p pkgname [description]
+
