@@ -28,7 +28,7 @@
 {synopt: {opt outcome:id(out)}}outcome variable (eg: {it:logwage}, {it:studentgrades}){p_end}
 
 {syntab:Path to Executable}
-{synopt: {opt apppath(str)}}the path to the bin folder of the Julia executable. You must download mannually from this {browse "https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v0.2.1.8":link} {p_end}
+{synopt: {opth apppath(str)}}the path to the bin folder of the Julia executable. You must download mannually from this {browse "https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v0.2.1.8":link} {p_end}
 
 {syntab:VCHDFE Executable Options (see {browse "https://highdimensionaleconlab.github.io/VarianceComponentsHDFE.jl/dev/Executable/":here})}
 
