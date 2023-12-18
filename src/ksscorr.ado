@@ -34,6 +34,8 @@ program define ksscorr
 	loc labfir  = cond("`firstlabel'"=="", "Worker" , "`firstlabel'") 
 	loc labsec  = cond("`secondlabel'"=="", "Firm" , "`secondlabel'")
 	loc kss_level = cond("`level'"=="", "match" , "`obs'")
+	loc nfirst = cond("`nofirst'"=="",1,0)
+	loc ncov = cond("`nocov'"=="",1,0)
 
 	*Check whether inshell in installed as a dependency 
 	cap which inshell
@@ -84,39 +86,134 @@ program define ksscorr
 	*inshell "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" 
 	if (c(os)=="Windows"){
 		
-		if (`getres'==0 & `covars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
-			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
-			--leave_out_level "`kss_level'" --print_level `print_level'
-			
-		if (`getres'==0 & `covars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'			
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+			
+
 	}
 	if (c(os)!="Windows"){
 		
-		if (`getres'==0 & `covars'==0)   inshell set JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1)   inshell set JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0)   inshell set JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1)   inshell set JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'			
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+			
 	}
 
 	*Erase the created temporary file 
