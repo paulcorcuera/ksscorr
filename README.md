@@ -24,7 +24,7 @@ You can check the new version additions [here](https://github.com/HighDimensiona
 
 ####  Things to be aware of:
 
-- `ksscorr` depends on the `inshell` package and you need to *manually* download and unzip the [Julia app](https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v0.2.1.8) based on your operating system. The path to the bin folder is a required argument in the `ksscorr` command.
+- `ksscorr` depends on the `inshell` package and you need to *manually* download and unzip the [Julia app](https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v1.0) based on your operating system. The path to the bin folder is a required argument in the `ksscorr` command.
 - Hasn't been thoroughly tested yet in MacOS and Unix systems. Please post any issues in the Github repository page.
 
 #### Future updates
@@ -55,7 +55,7 @@ As mentioned before, `ksscorr` depends on the `inshell` package. To install it, 
 ssc install inshell
 ```
 
-You need to manually download and unzip the [Julia app](https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v0.2.1.8) based on your operating system. The path to the bin folder is a required argument in the `ksscorr` command.
+You need to manually download and unzip the [Julia app](https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v1.0) based on your operating system. The path to the bin folder is a required argument in the `ksscorr` command.
 
 Next, you can run 
 
