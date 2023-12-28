@@ -34,8 +34,8 @@ program define ksscorr
 	loc labfir  = cond("`firstlabel'"=="", "Worker" , "`firstlabel'") 
 	loc labsec  = cond("`secondlabel'"=="", "Firm" , "`secondlabel'")
 	loc kss_level = cond("`level'"=="", "match" , "`obs'")
-	loc nfirst = cond("`nofirst'"=="",1,0)
-	loc ncov = cond("`nocov'"=="",1,0)
+	loc nofirst = cond("`nofirst'"=="",1,0)
+	loc nocov = cond("`nocov'"=="",1,0)
 
 	*Check whether inshell in installed as a dependency 
 	cap which inshell
