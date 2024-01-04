@@ -47,6 +47,8 @@
 
 {synopt : {opt getres:ults}}add the output from the KSS routine to the dataset (Pii, Bii, and indicator of the leave-out connected set). For more details please refer to the paper {p_end}
 
+{synopt : {opt lincom(zcovars)}}regress firm effects against a set of covariates; correct inference requires KSS bias correction.{p_end}
+
 
 {marker description}{...}
 {title:Description}
