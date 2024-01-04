@@ -27,9 +27,6 @@ You can check the new version additions [here](https://github.com/HighDimensiona
 - `ksscorr` depends on the `inshell` package and you need to *manually* download and unzip the [Julia app](https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/releases/tag/v1.13.1) based on your operating system. The path to the bin folder is a required argument in the `ksscorr` command.
 - Hasn't been thoroughly tested yet in MacOS and Unix systems. Please post any issues in the Github repository page.
 
-#### Future updates
-
-- Add the postestimation inference (lincom) part of the Julia routine.
 
 ## Citation
 
