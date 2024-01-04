@@ -61,9 +61,10 @@ program define ksscorr
 	if (`getres'==1) cap erase "`tempdir'/kss_out.csv"
 
 	*Order data so that we can parse easily in the app (I'll circumvent this issue eventually)
-	if (`covars') order `firstid' `secondid' `timevar' `outcomeid' `controls'
-	if (!`covars') order `firstid' `secondid' `timevar' `outcomeid' 
-	
+	if (`covars') & (!`zcovars')  order `firstid' `secondid' `timevar' `outcomeid' `controls'
+	if (!`covars') & (!`zcovars')  order `firstid' `secondid' `timevar' `outcomeid' 
+	if (`covars') & (`zcovars')  order `firstid' `secondid' `timevar' `outcomeid' `controls' `lincom_controls'
+	if (!`covars') & (`zcovars')  order `firstid' `secondid' `timevar' `outcomeid' `lincom_controls' 	
 	
 
 	* Check whether data is sorted by first_id timevar 
@@ -78,13 +79,18 @@ program define ksscorr
 	}
 
 	*Save intermediate file in the temp folder 
-	if (`covars'==0){
+	if (`covars'==0 & `zcovars'==0){
 		qui outsheet `firstid' `secondid' `timevar' `outcomeid' using "`tempdir'/data_for_kss.csv", comma replace 
 	}
-	if (`covars'==1){
+	if (`covars'==1 & `zcovars'==0){
 		qui outsheet `firstid' `secondid' `timevar' `outcomeid' `controls' using "`tempdir'/data_for_kss.csv", comma replace 
 	}
-
+	if (`covars'==0 & `zcovars'==1){
+		qui outsheet `firstid' `secondid' `timevar' `outcomeid' `lincom_controls' using "`tempdir'/data_for_kss.csv", comma replace 
+	}
+	if (`covars'==1 & `zcovars'==1){
+		qui outsheet `firstid' `secondid' `timevar' `outcomeid' `controls' `lincom_controls' using "`tempdir'/data_for_kss.csv", comma replace 
+	}
 
 	*inshell "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" 
 	if (c(os)=="Windows"){
