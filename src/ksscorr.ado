@@ -18,9 +18,11 @@ program define ksscorr
 		   [FIRSTLABel(str)] /// ATTACH LABEL TO FIRST ID
 		   [SECONDLABel(str)] /// ATTACH LABEL TO SECOND ID
 		   [GETRESults] /// CREATE LEAVE OUT SET INDICATOR AND ADD Pii and Bii's 
+		   [LINCOM(varlist)] /// REGRESS FIRM EFFECTS AGAINST SOME COVARIATES AFTER ROUTINE
 	
 	*If covariates are specified attach them to a controls local
 	if ("`partialout'" != "") unab controls: `partialout'
+	if ("`lincom'" != "") unab lincom_controls: `lincom'
 	
 	*If nthreads not specified we assume its equal to 1
 	loc threads = cond(`nthreads'==0,1,`nthreads')
@@ -36,6 +38,7 @@ program define ksscorr
 	loc kss_level = cond("`level'"=="", "match" , "`obs'")
 	loc nofirst = cond("`nofirst'"=="",1,0)
 	loc nocov = cond("`nocov'"=="",1,0)
+	loc zcovars = ("`lincom'" != "")
 
 	*Check whether inshell in installed as a dependency 
 	cap which inshell
@@ -86,133 +89,249 @@ program define ksscorr
 	*inshell "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" 
 	if (c(os)=="Windows"){
 		
-		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
 			
-		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'			
 			
-		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
 
-		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'			
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'
+
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell set JULIA_NUM_THREADS=`threads' && "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'
 			
 
 	}
 	if (c(os)!="Windows"){
 		
-		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
-			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
-			--leave_out_level "`kss_level'" --print_level `print_level'
-			
-		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
 			
-		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'			
 			
-		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
 
-		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level'
 			
-		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level'
 			
-		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv"
 			
-		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==0)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
 			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
 			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==0 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'			
+			
+		if (`getres'==0 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==0 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'
+
+		if (`getres'==0 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==0 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'"  --covariates `controls' --print_level `print_level' --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==0 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --do_lincom --lincom_covariates `lincom_controls'
+			
+		if (`getres'==1 & `covars'==1 & `nofirst'==1 & `nocov'==1 & `zcovars'==1)   inshell export JULIA_NUM_THREADS=`threads' ; "`apppath'/vchdfe" "`tempdir'/data_for_kss.csv" --header --algorithm "`algo'" ///
+			--simulations `simul' --first_id_display "`labfir'" --second_id_display "`labsec'"  ///
+			--leave_out_level "`kss_level'" --print_level `print_level' --write_detailed_csv --detailed_csv_path "`tempdir'/kss_out.csv" --covariates `controls' --do_lincom --lincom_covariates `lincom_controls'
 			
 	}
 
