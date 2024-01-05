@@ -55,7 +55,7 @@
 
 {pstd}
 {cmd:ksscorr} is a Stata wrapper of the Julia executable that performs bias correction of variance components in two-way fixed effects models (see {browse "https://github.com/HighDimensionalEconLab/VarianceComponentsHDFE.jl/tree/main":here}).
-In particular, suppose you are running a high dimensional linear model {hilite: y = X b + e }, where {hi: b} contains fixed effects in two large dimensions (e.g. worker and firms). Any quadratic form of {hi:b} is biased (see {browse "https://en.wikipedia.org/wiki/Quadratic_form_(statistics)": here}). 
+In particular, suppose you are running a high dimensional linear model {hilite: y = X b + e }, where {hi: b} contains fixed effects in two large dimensions (e.g. worker and firms). Any quadratic form of {hi:b} is biased (see {browse "https://en.wikipedia.org/wiki/Quadratic_form_(statistics)":here}). 
 In a setting with heteroskedastic errors we cannot construct a consistent estimator of the variance of errors to perform bias correction; instead, we can use a leave-out variance estimator to perform this correction. This is what the routine will perform.
 
 {marker examples}{...}
